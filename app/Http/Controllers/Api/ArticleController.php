@@ -20,16 +20,13 @@ class ArticleController extends Controller
 
     public function show(Request $request)
     {
-        $slug = $request->get('slug');
-        // $article = Article::with('comments', 'tags', 'state')->first();
-        $article = Article::findBySlug($slug);
+        $article = $this->service->getArticleBySlug($request);
         return new ArticleResource($article);
     }
 
     public function viewsIncrement(Request $request)
     {
-        $slug = $request->get('slug');
-        $article = Article::findBySlug($slug);
+        $article = $this->service->getArticleBySlug($request);
 
         $article->state->increment('views');
         return new ArticleResource($article);
@@ -37,8 +34,7 @@ class ArticleController extends Controller
 
     public function likesIncrement(Request $request)
     {
-        $slug = $request->get('slug');
-        $article = Article::findBySlug($slug);
+        $article = $this->service->getArticleBySlug($request);
 
         $inc = $request->get('increment');
         $inc ? $article->state->increment('likes') : $article->state->decrement('likes');
