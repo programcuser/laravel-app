@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        $article = Article::with('comments', 'tags', 'state')->first();
+        $slug = $request->get('slug');
+        // $article = Article::with('comments', 'tags', 'state')->first();
+        $article = Article::findBySlug($slug);
         return new ArticleResource($article);
     }
 }

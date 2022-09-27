@@ -2071,17 +2071,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
-  },
   computed: {
-    fullname: function fullname() {
-      return this.$store.getters.getFullName;
+    // article: 'article',
+    article: function article() {
+      return this.$store.state.article;
     },
-    name: function name() {
-      return this.$store.state.firstname;
+    tagsLen: function tagsLen() {
+      return this.$store.state.article.tags.length;
+    },
+    views: function views() {
+      return this.$store.getters.articleViews;
+    },
+    likes: function likes() {
+      return this.$store.getters.articleLikes;
     }
+  },
+  mounted: function mounted() {
+    console.log('Component article mounted.');
   }
 });
 
@@ -2105,7 +2127,15 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 Vue.component('article-component', (__webpack_require__(/*! ./components/ArticleComponent.vue */ "./resources/js/components/ArticleComponent.vue")["default"]));
 var app = new Vue({
   store: _store__WEBPACK_IMPORTED_MODULE_0__["default"],
-  el: '#app'
+  el: '#app',
+  created: function created() {
+    var url = window.location.pathname;
+    var slug = url.substring(url.lastIndexOf('/') + 1);
+    console.log(url);
+    console.log(slug);
+    this.$store.commit('SET_SLUG', slug);
+    this.$store.dispatch('getArticleData', slug);
+  }
 });
 
 /***/ }),
@@ -2128,26 +2158,45 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
-    firstname: 'John',
-    lastname: 'Jayson'
+    article: {
+      comments: [],
+      tags: [],
+      statistic: {
+        likes: 0,
+        views: 0
+      }
+    },
+    slug: ''
   },
   actions: {
-    testAction: function testAction(context, payload) {
-      context.commit('SET_FIRSTNAME', response.data.name);
-      context.commit('SET_LASTNAME', response.data.lastname);
+    getArticleData: function getArticleData(context, payload) {
+      console.log('context', context);
+      console.log('payload', payload);
+      axios.get('/api/article-json', {
+        params: {
+          slug: payload
+        }
+      }).then(function (response) {
+        context.commit('SET_ARTICLE', response.data.data);
+      })["catch"](function () {
+        console.log('Error');
+      });
     }
   },
   getters: {
-    getFullName: function getFullName(state) {
-      return state.firstname + ' ' + state.lastname;
+    articleViews: function articleViews(state) {
+      return state.article.statistic.views;
+    },
+    articleLikes: function articleLikes(state) {
+      return state.article.statistic.likes;
     }
   },
   mutations: {
-    SET_FIRSTNAME: function SET_FIRSTNAME(state, payload) {
-      state.firstname = payload;
+    SET_ARTICLE: function SET_ARTICLE(state, payload) {
+      return state.article = payload;
     },
-    SET_LASTNAME: function SET_LASTNAME(state, payload) {
-      state.lastname = payload;
+    SET_SLUG: function SET_SLUG(state, payload) {
+      return state.slug = payload;
     }
   }
 }));
@@ -19661,9 +19710,45 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("h1", [
-      _vm._v("Hello " + _vm._s(_vm.fullname) + " - " + _vm._s(_vm.name)),
+  return _c("div", { staticClass: "row mt-5" }, [
+    _c("div", { staticClass: "col-12 p-3" }, [
+      _c("img", {
+        staticClass: "border rounded mx-auto d-block",
+        attrs: { src: _vm.article.img, alt: "..." },
+      }),
+      _vm._v(" "),
+      _c("h5", { staticClass: "mt-5" }, [_vm._v(_vm._s(_vm.article.title))]),
+      _vm._v(" "),
+      _c(
+        "p",
+        _vm._l(_vm.article.tags, function (tag, index) {
+          return _c("span", { staticClass: "tag" }, [
+            _vm.tagsLen == index + 1
+              ? _c("span", [_vm._v(_vm._s(tag.label))])
+              : _c("span", [_vm._v(_vm._s(tag.label) + " | ")]),
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("p", { staticClass: "card-text" }, [_vm._v(_vm._s(_vm.article.body))]),
+      _vm._v(" "),
+      _c("p", [
+        _vm._v("Опубликованно:  "),
+        _c("i", [_vm._v(_vm._s(_vm.article.created_at))]),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "mt-3" }, [
+        _c("span", { staticClass: "badge bg-danger" }, [
+          _vm._v(_vm._s(_vm.views) + " "),
+          _c("i", { staticClass: "far fa-eye" }),
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "badge bg-primary" }, [
+          _vm._v(_vm._s(_vm.likes) + " "),
+          _c("i", { staticClass: "far fa-thumbs-up" }),
+        ]),
+      ]),
     ]),
   ])
 }
