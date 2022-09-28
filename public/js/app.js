@@ -2356,7 +2356,7 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1_
       console.log('After click: ', context.state.likeIt);
     },
     addComment: function addComment(context, payload) {
-      axios.put('/api/article-add-comment', {
+      axios.post('/api/article-add-comment', {
         subject: payload.subject,
         body: payload.body,
         article_id: payload.article_id
