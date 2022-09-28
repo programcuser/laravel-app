@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Http\Requests\Comment\CreateRequest;
+use App\Jobs\AddNewComment;
 
 class CommentController extends Controller
 {
@@ -23,6 +24,8 @@ class CommentController extends Controller
         //         'errors' => $validator->errors(),
         //     ], 422);
         // }
+
+        AddNewComment::dispatch($request['subject'], $request['body'], $request['article_id']);
 
         return response()->json([
             'status' => 'success',
