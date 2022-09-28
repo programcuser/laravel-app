@@ -14,12 +14,12 @@
     <div class="alert alert-success" role="alert" v-else>
         Комментарий успешно отправлен!
     </div>
-    <div class="toast-container pb-2 mt-5 mx-auto" style="min-width: 100%;" v-for="comment in comments">
+    <div class="toast-container position-relative pb-2 mt-5 mx-auto" style="min-width: 100%;" v-for="comment in comments">
         <div class="toast show" style="min-width: 100%;">
             <div class="toast-header">
                 <img src="https://via.placeholder.com/50/5F113B/FFFFFF/?text=User" class="rounded me-2" alt="...">
                 <strong class="me-auto">{{comment.subject}}</strong>
-                <small class="text-muted">{{$comment.created_at}}</small>
+                <small class="text-muted">{{comment.created_at}}</small>
             </div>
             <div class="toast-body">
                 {{comment.body}}
@@ -53,7 +53,7 @@ export default {
       this.$store.dispatch('addComment', {
         subject: this.subject,
         body: this.body,
-        article_id: this.$store.state.article_id,
+        article_id: this.$store.state.article.id,
       });
     }
   },
