@@ -15,6 +15,7 @@ export default new Vuex.Store({
     },
     slug: '',
     likeIt: true,
+    commentSuccess: false,
   },
 
   actions: {
@@ -47,6 +48,14 @@ export default new Vuex.Store({
       });
       console.log('After click: ', context.state.likeIt);
     },
+
+    addComment(context, payload) {
+        axios.put('/api/article-add-comment', { subject: payload.subject, body: payload.body, article_id: payload.article_id }).then((response) => {
+          context.commit('SET_COMMENT_SUCCESS', !context.state.commentSuccess);
+        }).catch(() => {
+          console.log('Add comment Error');
+        });
+      },
   },
 
   getters: {
@@ -68,6 +77,9 @@ export default new Vuex.Store({
     },
     SET_LIKE(state, payload) {
       return state.likeIt = payload;
+    },
+    SET_COMMENT_SUCCESS(state, payload) {
+      return state.commentSuccess = payload;
     },
   },
 })
