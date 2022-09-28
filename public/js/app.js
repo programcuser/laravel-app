@@ -2145,6 +2145,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2158,6 +2164,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     commentSuccess: function commentSuccess() {
       return this.$store.state.commentSuccess;
+    },
+    errorsMessage: function errorsMessage() {
+      return this.$store.state.errors;
     }
   },
   methods: {
@@ -2306,7 +2315,8 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1_
     },
     slug: '',
     likeIt: true,
-    commentSuccess: false
+    commentSuccess: false,
+    errors: []
   },
   actions: {
     getArticleData: function getArticleData(context, payload) {
@@ -2353,7 +2363,11 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_1_
       }).then(function (response) {
         context.commit('SET_COMMENT_SUCCESS', !context.state.commentSuccess);
         context.dispatch('getArticleData', context.state.slug);
-      })["catch"](function () {
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          context.state.errors = error.response.data.errors;
+        }
+
         console.log('Add comment Error');
       });
     }
@@ -20638,6 +20652,23 @@ var render = function () {
                     },
                   },
                 }),
+                _vm._v(" "),
+                _vm.errorsMessage.subject
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-warning",
+                        attrs: { role: "alert" },
+                      },
+                      [
+                        _vm._v(
+                          "\n                " +
+                            _vm._s(_vm.errorsMessage.subject[0]) +
+                            "\n            "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "mb-3" }, [
@@ -20668,6 +20699,23 @@ var render = function () {
                     },
                   },
                 }),
+                _vm._v(" "),
+                _vm.errorsMessage.body
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-warning",
+                        attrs: { role: "alert" },
+                      },
+                      [
+                        _vm._v(
+                          "\n                " +
+                            _vm._s(_vm.errorsMessage.body[0]) +
+                            "\n            "
+                        ),
+                      ]
+                    )
+                  : _vm._e(),
               ]),
               _vm._v(" "),
               _c(
