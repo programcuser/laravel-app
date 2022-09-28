@@ -24,7 +24,7 @@ const app = new Vue({
     console.log(url);
     console.log(slug);
     this.$store.commit('SET_SLUG', slug);
-    this.$store.dispatch('getArticleData', slug);
-    this.$store.dispatch('viewsIncrement', slug);
+    this.$store.dispatch('article/getArticleData', slug);
+    this.$store.dispatch('article/viewsIncrement', slug);
   },
 });

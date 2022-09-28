@@ -20,19 +20,23 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-  computed: {
+  computed: mapState({
     // article: 'article',
-    article() {
-      return this.$store.state.article;
-    },
-    tagsLen() {
-      return this.$store.state.article.tags.length;
-    },
-  },
+    // article() {
+    //   return this.$store.state.article;
+    // },
+    // tagsLen() {
+    //   return this.$store.state.article.tags.length;
+    // },
+    article: state => state.article.article,
+    tagsLen: state => state.article.article.tags.length,
+  }),
 
   mounted() {
-    console.log('Component article mounted.')
+    console.log('Article Component mounted.')
   },
 }
 </script>
